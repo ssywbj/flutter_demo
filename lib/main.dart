@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
+  //runApp(DemoApp()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
+}
+
+class DemoApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "DemoTitle",
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: Text('DemoText3'),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
