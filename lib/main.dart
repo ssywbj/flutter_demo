@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
-  //runApp(DemoApp()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
+  //runApp(NewRoute()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
 }
 
-class DemoApp extends StatelessWidget {
+class NewRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "DemoTitle",
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('New route'),
       ),
-      home: Text('DemoText3'),
+      body: Center(
+        child: Text('This is new route'),
+      ),
     );
   }
 }
@@ -119,6 +119,21 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) {
+                          return NewRoute();
+                        },
+                      /*fullscreenDialog: true*/
+                ));
+              },
+              child: Text('This is new route'),
+              color: Colors.red,
+              textColor: Colors.blue,
+            )
           ],
         ),
       ),
