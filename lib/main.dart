@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
-  //runApp(NewRoute()); //runApp(Widget)：启动Flutter应用；MyApp()：应用的根组件
-}
-
-class NewRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('New route'),
-      ),
-      body: Center(
-        child: Text('This is new route'),
-      ),
-    );
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +27,16 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
+      //命名路由使用步骤：1.注册路由表
+      routes: {
+        'home_route': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
+        'new_route': (context) => NewRoute(),
+        'setting_route': (context) => RouteSetting(),
+      },
+      //名为"home_route"的路由作为应用的home(首页)，会覆盖'home'属性
+      initialRoute: 'home_route',
+      //名为"new_route"的路由作为应用的home(首页)，会覆盖'home'属性
+      //initialRoute: 'new_route',
     );
   }
 }
@@ -121,19 +116,45 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             FlatButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) {
-                          return NewRoute();
-                        },
-                      /*fullscreenDialog: true*/
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return NewRoute();
+                  },
+                  /*fullscreenDialog: true*/
                 ));
               },
               child: Text('This is new route'),
               color: Colors.red,
               textColor: Colors.blue,
-            )
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TipTestRoute(),
+                    ));
+              },
+              child: Text('路由传值'),
+              color: Colors.red,
+              textColor: Colors.blue,
+            ),
+            FlatButton(
+              //命名路由使用步骤：2.使用路由名打开新路由
+              onPressed: () => Navigator.pushNamed(context, 'new_route'),
+              child: Text('通过路由名打开新界面'),
+              color: Colors.red,
+              textColor: Colors.blue,
+            ),
+            FlatButton(
+              //命名路由使用步骤：2.使用路由名打开新路由
+              //onPressed: () => Navigator.pushNamed(context, 'setting_route',arguments: 'hi'),
+              onPressed: () => Navigator.of(context)
+                  .pushNamed('setting_route', arguments: '值是通过命名路由传过来的'),
+              child: Text('路由名打开新界面并传值'),
+              color: Colors.red,
+              textColor: Colors.blue,
+            ),
           ],
         ),
       ),
@@ -142,6 +163,100 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class NewRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('New route'),
+      ),
+      body: Center(
+        child: Text('This is new route'),
+      ),
+    );
+  }
+}
+
+class TipRoute extends StatelessWidget {
+  final String text;
+
+  //接收一个text参数
+  const TipRoute({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('提示'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(18),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Text(text), //显示上个路由带过来的值
+              RaisedButton(
+                onPressed: () => Navigator.pop(context, '我是返回值！'), //给上一个路由返回结果
+                child: Text('返回'),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TipTestRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RaisedButton(
+        onPressed: () async {
+          //打开TipRoute并等待返回结果
+          var result = await Navigator.push(
+            //若不使用关键字await，则直接返回结果，此时打印的是一个对象
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      TipRoute(
+                        text: "值由上个路由带过来", //给TipRoute传值
+                      )));
+          print('route return result: $result');
+        },
+        child: Text("打开新页面"),
+      ),
+    );
+  }
+}
+
+class RouteSetting extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var value = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
+    print('named route pass value: $value');
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('命名路由传值'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(18),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Text(value), //显示上个路由带过来的值
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
