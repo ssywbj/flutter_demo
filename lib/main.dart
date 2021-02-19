@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -88,6 +89,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  var _englishWord;
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -101,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _englishWord = WordPair.random();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -175,17 +179,16 @@ class _MyHomePageState extends State<MyHomePage> {
             FlatButton(
               //命名路由使用步骤：2.使用路由名打开新路由
               //onPressed: () => Navigator.pushNamed(context, 'setting_route',arguments: 'hi'),
-              onPressed: () =>
-                  Navigator.of(context)
-                      .pushNamed('setting_route', arguments: '值是通过命名路由传过来的'),
+              onPressed: () => Navigator.of(context)
+                  .pushNamed('setting_route', arguments: '值是通过命名路由传过来的'),
               child: Text('路由名打开新界面并传值'),
               color: Colors.red,
               textColor: Colors.blue,
             ),
             FlatButton(
               onPressed: () async {
-                var result = await Navigator.pushNamed(
-                    context, 'tip_route', arguments: '值通过路由名带参传过来');
+                var result = await Navigator.pushNamed(context, 'tip_route',
+                    arguments: '值通过路由名带参传过来');
                 print('named_tip_route, return value: $result');
               },
               child: Text('路由名带参并传值'),
@@ -194,10 +197,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             FlatButton(
               onPressed: () =>
-                  Navigator.pushNamed(context, 'test_OnGenerateRoute')
-              ,
+                  Navigator.pushNamed(context, 'test_OnGenerateRoute'),
               child: Text('OnGenerateRoute'),
               color: Colors.green,
+              textColor: Colors.black,
+            ),
+            FlatButton(
+              onPressed: () {
+                setState(() => _englishWord = WordPair.random());
+              },
+              child: Text('$_englishWord'),
+              color: Colors.deepPurple,
               textColor: Colors.black,
             ),
           ],
@@ -302,11 +312,10 @@ class TipTestRouteState extends State<TipTestRoute> {
         onPressed: () async {
           //打开TipRoute并等待返回结果
           result = await Navigator.push(
-            //若不使用关键字await，则直接返回结果，此时打印的是一个对象
+              //若不使用关键字await，则直接返回结果，此时打印的是一个对象
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      TipRoute(
+                  builder: (context) => TipRoute(
                         text: "值由上个路由带过来", //给TipRoute传值
                       )));
 
@@ -322,10 +331,7 @@ class TipTestRouteState extends State<TipTestRoute> {
 class RouteSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var value = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
+    var value = ModalRoute.of(context).settings.arguments;
     print('named route pass value: $value');
 
     return Scaffold(
