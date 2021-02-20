@@ -91,6 +91,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var _englishWord;
 
+  _MyHomePageState() {
+    _englishWord = WordPair.random();
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -104,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _englishWord = WordPair.random();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -204,6 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             FlatButton(
               onPressed: () {
+                //或这样写：调用匿名方法
                 setState(() => _englishWord = WordPair.random());
               },
               child: Text('$_englishWord'),
@@ -214,13 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        //onPressed: _incrementCounter,
-        onPressed: () {
-          //或这样写：调用匿名方法
-          setState(() {
-            _counter++;
-          });
-        },
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
